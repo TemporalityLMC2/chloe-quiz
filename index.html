@@ -1,0 +1,1579 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Chloé · 1 Bag = 1 Émotion</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', sans-serif;
+    background: #F5EFE6;
+    color: #1A1614;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+  button { cursor: pointer; transition: all 0.15s ease; font-family: inherit; }
+  button:active { transform: scale(0.97); }
+  input { font-family: inherit; }
+  input:focus { outline: none; }
+  ul { list-style: none; }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.85; }
+  }
+  @keyframes pulseDot {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+  /* === HOME === */
+  .home {
+    min-height: 100vh;
+    background: linear-gradient(180deg, #F5EFE6 0%, #E8DFD0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+  .home-inner {
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    animation: fadeIn 0.6s ease;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+  .brand-line {
+    flex: 1;
+    height: 1px;
+    background: #1A1614;
+    max-width: 60px;
+  }
+  .brand-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    font-weight: 400;
+  }
+  .title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    line-height: 1.05;
+    font-weight: 300;
+    letter-spacing: -1px;
+    margin-bottom: 16px;
+  }
+  .title-accent {
+    font-style: italic;
+    font-weight: 500;
+    color: #C9A876;
+  }
+  .subtitle {
+    font-size: 11px;
+    letter-spacing: 3px;
+    color: #3A3530;
+    margin-bottom: 64px;
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-bottom: 40px;
+  }
+  .btn-primary {
+    background: #1A1614;
+    color: #FBF7F0;
+    border: none;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+  .btn-secondary {
+    background: transparent;
+    color: #1A1614;
+    border: 1.5px solid #1A1614;
+    padding: 20px 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    width: 100%;
+  }
+  .btn-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    opacity: 0.7;
+    font-weight: 500;
+  }
+  .btn-main {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    letter-spacing: 2px;
+    font-weight: 500;
+  }
+  .footer {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #3A3530;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+  }
+
+  /* === SCREENS === */
+  .screen {
+    min-height: 100vh;
+    padding: 32px 24px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+  }
+  .screen-inner {
+    width: 100%;
+    max-width: 480px;
+    animation: fadeIn 0.4s ease;
+  }
+  .screen-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .screen-text {
+    font-size: 15px;
+    line-height: 1.6;
+    color: #3A3530;
+    margin-bottom: 32px;
+  }
+  .info-box {
+    background: #FBF7F0;
+    border: 1px solid #E8DFD0;
+    padding: 24px;
+    margin-bottom: 32px;
+  }
+  .info-title {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #8B4513;
+  }
+  .info-list li {
+    font-size: 14px;
+    line-height: 1.8;
+    color: #3A3530;
+    padding-left: 16px;
+    position: relative;
+  }
+  .info-list li::before {
+    content: '·';
+    position: absolute;
+    left: 0;
+    font-weight: 700;
+    color: #C9A876;
+  }
+  .form-group {
+    margin-bottom: 20px;
+  }
+  .label {
+    display: block;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    color: #8B4513;
+    margin-bottom: 8px;
+  }
+  .input {
+    width: 100%;
+    padding: 16px 18px;
+    font-size: 16px;
+    background: #FBF7F0;
+    border: 1.5px solid #E8DFD0;
+    color: #1A1614;
+  }
+  .input-code {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    letter-spacing: 6px;
+    text-align: center;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+  .error {
+    background: #FFE4E1;
+    color: #8B0000;
+    padding: 12px;
+    font-size: 13px;
+    margin-bottom: 16px;
+    border: 1px solid #FFB6B6;
+  }
+
+  /* === MASTER GAME === */
+  .master-screen {
+    min-height: 100vh;
+    padding: 20px 18px 100px;
+    max-width: 520px;
+    margin: 0 auto;
+  }
+  .master-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #1A1614;
+    color: #FBF7F0;
+    margin-bottom: 16px;
+  }
+  .code-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+  }
+  .code-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    letter-spacing: 4px;
+    font-weight: 500;
+  }
+  .share-btn {
+    background: #C9A876;
+    color: #1A1614;
+    border: none;
+    padding: 10px 16px;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  .players-bar {
+    font-size: 12px;
+    color: #3A3530;
+    padding: 8px 4px;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+  .players-dot {
+    color: #3DA85B;
+    font-size: 14px;
+    animation: pulseDot 2s infinite;
+  }
+  .players-list {
+    opacity: 0.7;
+    font-size: 11px;
+  }
+  .progress {
+    margin-bottom: 20px;
+  }
+  .progress-bar {
+    height: 3px;
+    background: #E8DFD0;
+    overflow: hidden;
+    margin-bottom: 6px;
+  }
+  .progress-fill {
+    height: 100%;
+    background: #1A1614;
+    transition: width 0.4s ease;
+  }
+  .progress-text {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #3A3530;
+    text-align: right;
+  }
+  .question-card {
+    background: #FBF7F0;
+    padding: 28px;
+    margin-bottom: 16px;
+    border: 1px solid #E8DFD0;
+    animation: fadeIn 0.4s ease;
+  }
+  .question-tag {
+    font-size: 9px;
+    letter-spacing: 3px;
+    font-weight: 700;
+    color: #8B4513;
+    margin-bottom: 16px;
+  }
+  .emotion-big {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 44px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 1.1;
+    margin-bottom: 12px;
+  }
+  .emotion-medium {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 36px;
+    font-weight: 400;
+    letter-spacing: 2px;
+    line-height: 1.1;
+  }
+  .question-desc {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #3A3530;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    margin-bottom: 20px;
+  }
+  .indices-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .indice-chip {
+    background: #F5EFE6;
+    padding: 6px 12px;
+    font-size: 12px;
+    color: #3A3530;
+    border: 1px solid #E8DFD0;
+  }
+  .cliente-bubble {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    background: #F5EFE6;
+    padding: 18px;
+    border: 1px dashed #A8895B;
+  }
+  .cliente-icon {
+    font-size: 28px;
+  }
+  .cliente-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #1A1614;
+  }
+  .cliente-bubble-small {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #1A1614;
+    background: #F5EFE6;
+    padding: 16px;
+    border: 1px dashed #A8895B;
+    margin-top: 12px;
+  }
+  .reponse-box {
+    margin-top: 20px;
+    padding: 18px;
+    background: #1A1614;
+    color: #FBF7F0;
+    animation: fadeIn 0.4s ease;
+  }
+  .reponse-label {
+    font-size: 9px;
+    letter-spacing: 2.5px;
+    opacity: 0.6;
+    margin-bottom: 8px;
+  }
+  .reponse-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 500;
+    letter-spacing: 1px;
+  }
+  .reponse-text {
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 12px;
+  }
+  .mots-cles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .mot-cle {
+    background: #C9A876;
+    color: #1A1614;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .buzz-alert {
+    background: #C9A876;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease;
+  }
+  .buzz-pulse {
+    position: absolute;
+    top: 50%;
+    left: 30px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #1A1614;
+    transform: translateY(-50%);
+    animation: pulse 1s infinite;
+  }
+  .buzz-content {
+    padding-left: 36px;
+    margin-bottom: 16px;
+  }
+  .buzz-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .buzz-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 30px;
+    font-weight: 500;
+    color: #1A1614;
+  }
+  .buzz-actions {
+    display: flex;
+    gap: 8px;
+  }
+  .buzz-correct {
+    flex: 1;
+    background: #1A1614;
+    color: #FBF7F0;
+    border: none;
+    padding: 14px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  .buzz-wrong {
+    background: #FBF7F0;
+    color: #1A1614;
+    border: 1.5px solid #1A1614;
+    padding: 14px 18px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+  }
+  .controls {
+    margin-bottom: 20px;
+  }
+  .reveal-btn {
+    width: 100%;
+    background: #FBF7F0;
+    color: #1A1614;
+    border: 1.5px solid #1A1614;
+    padding: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .nav-row {
+    display: flex;
+    gap: 8px;
+  }
+  .nav-btn {
+    flex: 1;
+    background: transparent;
+    color: #1A1614;
+    border: 1.5px solid #E8DFD0;
+    padding: 14px;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+  }
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+  .nav-btn-primary {
+    flex: 1.5;
+    background: #1A1614;
+    color: #FBF7F0;
+    border: none;
+    padding: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 2px;
+  }
+  .scores-panel {
+    background: #FBF7F0;
+    border: 1px solid #E8DFD0;
+    padding: 16px;
+    margin-top: 16px;
+  }
+  .scores-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    color: #8B4513;
+  }
+  .reset-btn {
+    background: transparent;
+    border: 1px solid #E8DFD0;
+    font-size: 9px;
+    padding: 4px 8px;
+    letter-spacing: 1.5px;
+    color: #3A3530;
+  }
+  .score-row-live {
+    display: flex;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #E8DFD0;
+    gap: 12px;
+  }
+  .score-row-live:last-child { border-bottom: none; }
+  .score-rank {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: #C9A876;
+    font-weight: 500;
+    width: 24px;
+  }
+  .score-name {
+    flex: 1;
+    font-size: 14px;
+    font-weight: 500;
+  }
+  .score-value-live {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 600;
+    color: #1A1614;
+  }
+  .point-controls {
+    display: flex;
+    gap: 4px;
+  }
+  .point-btn {
+    background: #F5EFE6;
+    border: 1px solid #E8DFD0;
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #1A1614;
+  }
+
+  /* === PLAYER === */
+  .player-screen {
+    min-height: 100vh;
+    padding: 20px 18px;
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .player-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #1A1614;
+    color: #FBF7F0;
+    margin-bottom: 16px;
+  }
+  .player-name-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 2px;
+  }
+  .player-name-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+  }
+  .player-score-box {
+    text-align: right;
+  }
+  .player-score-label {
+    font-size: 9px;
+    letter-spacing: 2px;
+    opacity: 0.7;
+    margin-bottom: 2px;
+  }
+  .player-score-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 28px;
+    font-weight: 600;
+    color: #C9A876;
+  }
+  .player-progress {
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #3A3530;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .player-question-card {
+    background: #FBF7F0;
+    padding: 24px;
+    border: 1px solid #E8DFD0;
+    margin-bottom: 24px;
+  }
+  .player-hint {
+    font-size: 12px;
+    color: #3A3530;
+    font-style: italic;
+    font-family: 'Cormorant Garamond', serif;
+    margin-top: 16px;
+    text-align: center;
+  }
+  .player-listen {
+    text-align: center;
+    padding: 28px 16px 16px;
+  }
+  .listen-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+    opacity: 0.7;
+  }
+  .listen-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-weight: 500;
+    letter-spacing: 1px;
+    color: #1A1614;
+  }
+  .buzzer-area {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 0;
+    min-height: 280px;
+  }
+  .buzzer-btn {
+    width: 240px;
+    height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 30% 30%, #C9A876, #A8895B);
+    border: none;
+    color: #1A1614;
+    box-shadow: 0 12px 30px rgba(168, 137, 91, 0.4), inset 0 -8px 20px rgba(0,0,0,0.15), inset 0 4px 12px rgba(255,255,255,0.3);
+    position: relative;
+  }
+  .buzzer-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+  .buzzer-inner {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  }
+  .buzzer-label {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 56px;
+    font-weight: 600;
+    letter-spacing: 6px;
+    margin-bottom: 8px;
+  }
+  .buzzer-sub-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    font-weight: 600;
+    opacity: 0.8;
+  }
+  .my-buzz-message {
+    text-align: center;
+    padding: 40px;
+    background: #C9A876;
+    width: 100%;
+    animation: fadeIn 0.3s ease;
+  }
+  .my-buzz-icon {
+    font-size: 60px;
+    margin-bottom: 12px;
+    animation: pulse 0.8s infinite;
+  }
+  .my-buzz-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 32px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+  .my-buzz-sub {
+    font-size: 12px;
+    letter-spacing: 1.5px;
+    opacity: 0.8;
+  }
+  .other-buzz-message {
+    text-align: center;
+    padding: 40px;
+    background: #E8DFD0;
+    width: 100%;
+  }
+  .other-buzz-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.5;
+  }
+  .other-buzz-text {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: #3A3530;
+  }
+  .revealed-message {
+    text-align: center;
+    padding: 40px;
+    background: #FBF7F0;
+    border: 1px solid #E8DFD0;
+    width: 100%;
+  }
+  .revealed-icon {
+    font-size: 40px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+  }
+  .revealed-sub {
+    font-size: 11px;
+    color: #3A3530;
+    font-style: italic;
+    margin-top: 8px;
+  }
+  .podium {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 12px;
+    margin: 32px 0;
+  }
+  .podium-player {
+    flex: 1;
+    background: #FBF7F0;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #E8DFD0;
+  }
+  .podium-first {
+    background: #C9A876;
+    transform: scale(1.1);
+  }
+  .podium-rank {
+    font-size: 36px;
+    margin-bottom: 8px;
+  }
+  .podium-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .podium-score {
+    font-size: 12px;
+    color: #3A3530;
+  }
+  .all-scores {
+    margin-bottom: 24px;
+  }
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 12px 0;
+    border-bottom: 1px solid #E8DFD0;
+    font-size: 14px;
+  }
+  .score-row-me {
+    font-weight: 700;
+    color: #8B4513;
+  }
+  .score-value {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .my-result {
+    background: #C9A876;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  .my-result-label {
+    font-size: 10px;
+    letter-spacing: 2.5px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .my-result-rank {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 64px;
+    font-weight: 600;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .my-result-score {
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .loading {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 24px;
+    font-style: italic;
+    color: #3A3530;
+  }
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 2px solid #E8DFD0;
+    border-top-color: #1A1614;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  .config-warning {
+    background: #FFE4B5;
+    border: 1px solid #DEB887;
+    padding: 16px;
+    margin-bottom: 24px;
+    font-size: 13px;
+    line-height: 1.5;
+    color: #5C3317;
+  }
+  .config-warning strong { display: block; margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-database-compat.js"></script>
+
+<script>
+// ============================================================
+// ⚙️ CONFIGURATION FIREBASE — À REMPLACER PAR LES TIENNES
+// ============================================================
+// Voir le guide pour obtenir ces 6 lignes en 5 minutes (gratuit)
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyAzCw4mfS55-5UVriUFZoChKvhU6VMHtKA",
+  authDomain: "chloe-quiz.firebaseapp.com",
+  databaseURL: "https://chloe-quiz-default-rtdb.europe-west1.firebasedatabase.app",
+  projectId: "chloe-quiz",
+  storageBucket: "chloe-quiz.firebasestorage.app",
+  messagingSenderId: "762143623148",
+  appId: "1:762143623148:web:26bde5e17e9d518bf762c9"
+};
+// ============================================================
+
+const FIREBASE_CONFIGURED = FIREBASE_CONFIG.apiKey !== "REMPLACE_MOI";
+
+let db = null;
+if (FIREBASE_CONFIGURED) {
+  firebase.initializeApp(FIREBASE_CONFIG);
+  db = firebase.database();
+}
+
+// ============================================================
+// 🎯 DONNÉES DU QUIZ
+// ============================================================
+const QUESTIONS = [
+  { id: 1, type: 'emotion', emotion: 'EFFORTLESS',
+    indices: ['lightweight', 'supple', 'everyday tote', 'planned or spontaneous'],
+    description: "Léger, souple, s'adapte à votre journée — le tote parfait pour se sentir effortless",
+    reponse: 'Chloé Spin' },
+  { id: 2, type: 'emotion', emotion: 'HOLIDAYS DESIRE',
+    indices: ['raffia', 'natural relaxed refinement', 'holidays all year long', 'chic without trying'],
+    description: "L'impression d'être en vacances toute l'année — easygoing et naturellement chic",
+    reponse: 'Summer Banana' },
+  { id: 3, type: 'emotion', emotion: 'SEDUCTION',
+    indices: ['bijou bag', 'sophisticated', 'feminine', 'day-to-evening'],
+    description: "L'ultime bijou bag — attire l'attention de façon sophistiquée et subtile",
+    reponse: 'Bracelet Bag' },
+  { id: 4, type: 'emotion', emotion: 'NOSTALGIA',
+    indices: ['iconic', 'strong heritage', 'timeless', 'the bag you keep forever'],
+    description: "Iconique, reassuring, recognizable — le sac qu'on garde pour toujours",
+    reponse: 'Paddington' },
+  { id: 5, type: 'emotion', emotion: 'SERENITY',
+    indices: ['feminine and graceful', 'soft rounded silhouette', 'balanced', 'comforting and chic'],
+    description: 'Féminin et gracieux — silhouette douce et naturellement équilibrée',
+    reponse: 'Marcie' },
+  { id: 6, type: 'emotion', emotion: 'BOLDNESS',
+    indices: ['statement', 'intricate design', 'unique', 'immediately stands out'],
+    description: 'Un statement piece — design unique qui attire immédiatement le regard',
+    reponse: 'Chloé Plissé' },
+  { id: 7, type: 'objection', bag: 'Chloé Spin',
+    cliente: 'Je trouve le sac trop simple.',
+    reponseAttendue: "Silhouette minimaliste avec lignes graphiques, chic yet relaxed, cuir sensuel — c'est l'esprit effortless du Spin",
+    motsCles: ['minimaliste', 'graphique', 'effortless', 'sensuel'] },
+  { id: 8, type: 'objection', bag: 'Chloé Spin',
+    cliente: "Il n'y a pas de fermeture, ça me dérange.",
+    reponseAttendue: 'Le tote garde sa souplesse. Porté épaule le bras ferme naturellement le sac. Le ring permet un autre porté',
+    motsCles: ['souplesse', 'épaule', 'ring', 'porté'] },
+  { id: 9, type: 'objection', bag: 'Paddington',
+    cliente: 'Le cadenas est beaucoup trop gros.',
+    reponseAttendue: 'Signature iconique volontairement oversized — esprit rebelle et bold qui casse les codes du luxe classique',
+    motsCles: ['iconique', 'oversized', 'rebelle', 'bold'] },
+  { id: 10, type: 'objection', bag: 'Paddington',
+    cliente: "Je me souviens qu'il était hyper lourd.",
+    reponseAttendue: 'Retravaillé en version plus légère et moderne, même esprit qu\'en 2005 mais adapté à aujourd\'hui',
+    motsCles: ['retravaillé', 'léger', 'moderne', '2005'] },
+  { id: 11, type: 'objection', bag: 'Chloé Spin',
+    cliente: 'Le cuir ne semble pas assez luxueux.',
+    reponseAttendue: 'Cuir semi-aniline, finition demi-transparente qui préserve le caractère naturel, peaux luxueuses et uniques',
+    motsCles: ['semi-aniline', 'naturel', 'luxueuses', 'unique'] },
+  { id: 12, type: 'objection', bag: 'Paddington',
+    cliente: "J'ai déjà le Paddington original de 2005.",
+    reponseAttendue: 'Service de pampering en Italie — nos artisans peuvent restaurer, protéger et raviver la couleur de votre sac',
+    motsCles: ['pampering', 'artisans', 'restaurer', 'Italie'] },
+];
+
+// ============================================================
+// 🛠️ HELPERS
+// ============================================================
+const generateGameCode = () => Math.random().toString(36).substring(2, 8).toUpperCase();
+const generatePlayerId = () => 'p_' + Math.random().toString(36).substring(2, 10);
+const $ = (id) => document.getElementById(id);
+const el = (tag, attrs = {}, ...children) => {
+  const e = document.createElement(tag);
+  Object.entries(attrs).forEach(([k, v]) => {
+    if (k === 'class') e.className = v;
+    else if (k === 'style') e.style.cssText = v;
+    else if (k.startsWith('on')) e.addEventListener(k.substring(2), v);
+    else if (v !== null && v !== undefined && v !== false) e.setAttribute(k, v);
+  });
+  children.forEach(c => {
+    if (c === null || c === undefined || c === false) return;
+    if (typeof c === 'string' || typeof c === 'number') e.appendChild(document.createTextNode(c));
+    else e.appendChild(c);
+  });
+  return e;
+};
+
+// ============================================================
+// 🧠 STATE
+// ============================================================
+let currentView = 'home';
+let playerId = localStorage.getItem('chloePlayerId') || generatePlayerId();
+localStorage.setItem('chloePlayerId', playerId);
+let playerName = '';
+let gameCode = '';
+let gameStateListener = null;
+let currentGameState = null;
+let buzzedLocally = false;
+
+// Check URL for game code
+const urlParams = new URLSearchParams(window.location.search);
+const codeFromUrl = urlParams.get('code');
+if (codeFromUrl) {
+  gameCode = codeFromUrl.toUpperCase();
+  currentView = 'player-join';
+}
+
+// ============================================================
+// 🎨 RENDER FUNCTIONS
+// ============================================================
+function render() {
+  const app = $('app');
+  app.innerHTML = '';
+  if (currentView === 'home') app.appendChild(renderHome());
+  else if (currentView === 'master-setup') app.appendChild(renderMasterSetup());
+  else if (currentView === 'master-game') app.appendChild(renderMasterGame());
+  else if (currentView === 'player-join') app.appendChild(renderPlayerJoin());
+  else if (currentView === 'player-game') app.appendChild(renderPlayerGame());
+}
+
+function goTo(view) {
+  if (gameStateListener) {
+    db.ref('games/' + gameCode).off('value', gameStateListener);
+    gameStateListener = null;
+  }
+  currentView = view;
+  render();
+}
+
+// === HOME ===
+function renderHome() {
+  return el('div', { class: 'home' },
+    el('div', { class: 'home-inner' },
+      el('div', { class: 'brand' },
+        el('div', { class: 'brand-line' }),
+        el('div', { class: 'brand-text' }, 'CHLOÉ'),
+        el('div', { class: 'brand-line' })
+      ),
+      el('h1', { class: 'title' },
+        '1 BAG',
+        el('br'),
+        el('span', { class: 'title-accent' }, '='),
+        el('br'),
+        '1 ÉMOTION'
+      ),
+      el('p', { class: 'subtitle' }, 'Morning Brief · Quiz interactif'),
+      el('div', { class: 'btn-group' },
+        el('button', { class: 'btn-primary', onclick: () => goTo('master-setup') },
+          el('span', { class: 'btn-label' }, 'JE SUIS LE'),
+          el('span', { class: 'btn-main' }, 'MAÎTRE DU JEU')
+        ),
+        el('button', { class: 'btn-secondary', onclick: () => goTo('player-join') },
+          el('span', { class: 'btn-label' }, 'JE SUIS'),
+          el('span', { class: 'btn-main' }, 'PARTICIPANT·E')
+        )
+      ),
+      el('div', { class: 'footer' }, '10 minutes · Storytelling & Objections')
+    )
+  );
+}
+
+// === MASTER SETUP ===
+function renderMasterSetup() {
+  const handleStart = async () => {
+    if (!FIREBASE_CONFIGURED) {
+      alert("⚠️ Firebase n'est pas configuré. Ouvre le fichier HTML et remplace les valeurs en haut du script (voir le guide).");
+      return;
+    }
+    const code = generateGameCode();
+    const gameState = {
+      code,
+      currentQuestion: 0,
+      buzz: null,
+      players: {},
+      scores: {},
+      revealed: false,
+      started: true,
+      createdAt: Date.now(),
+    };
+    try {
+      await db.ref('games/' + code).set(gameState);
+      gameCode = code;
+      goTo('master-game');
+    } catch (err) {
+      alert('Erreur création partie : ' + err.message);
+    }
+  };
+
+  return el('div', { class: 'screen' },
+    el('div', { class: 'screen-inner' },
+      !FIREBASE_CONFIGURED && el('div', { class: 'config-warning' },
+        el('strong', {}, "⚠️ Firebase non configuré"),
+        "Pour activer la synchronisation temps réel, configure Firebase (gratuit, 5 minutes). Voir le guide fourni avec ce fichier."
+      ),
+      el('h2', { class: 'screen-title' }, 'MAÎTRE DU JEU'),
+      el('p', { class: 'screen-text' }, 'Tu vas créer une partie et obtenir un code à partager aux participants via WhatsApp.'),
+      el('div', { class: 'info-box' },
+        el('div', { class: 'info-title' }, 'TON RÔLE'),
+        el('ul', { class: 'info-list' },
+          el('li', {}, 'Tu lances les questions une à une'),
+          el('li', {}, 'Tu vois qui a buzzé en premier'),
+          el('li', {}, 'Tu attribues les points'),
+          el('li', {}, 'Tu animes le débrief')
+        )
+      ),
+      el('button', { class: 'btn-primary', onclick: handleStart },
+        el('span', { class: 'btn-main' }, 'CRÉER LA PARTIE')
+      )
+    )
+  );
+}
+
+// === MASTER GAME ===
+function renderMasterGame() {
+  // Setup listener
+  if (!gameStateListener && FIREBASE_CONFIGURED) {
+    gameStateListener = (snapshot) => {
+      currentGameState = snapshot.val();
+      renderMasterGameContent();
+    };
+    db.ref('games/' + gameCode).on('value', gameStateListener);
+  }
+
+  const container = el('div', { class: 'master-screen', id: 'master-game-content' });
+  if (!currentGameState) {
+    container.appendChild(el('div', { class: 'loading' },
+      el('div', { class: 'spinner' }),
+      el('div', {}, 'Chargement…')
+    ));
+  }
+  return container;
+}
+
+function renderMasterGameContent() {
+  const container = $('master-game-content');
+  if (!container || !currentGameState) return;
+
+  const state = currentGameState;
+  container.innerHTML = '';
+
+  if (state.finished) {
+    renderEndScreen(container, state, false);
+    return;
+  }
+
+  const question = QUESTIONS[state.currentQuestion];
+  const players = Object.values(state.players || {});
+  const buzz = state.buzz;
+  const buzzPlayer = buzz ? state.players[buzz.playerId] : null;
+  const scores = state.scores || {};
+
+  // Header
+  const header = el('div', { class: 'master-header' },
+    el('div', {},
+      el('div', { class: 'code-label' }, 'CODE DE LA PARTIE'),
+      el('div', { class: 'code-value' }, gameCode)
+    ),
+    el('button', { class: 'share-btn', onclick: handleShare }, '📤 PARTAGER')
+  );
+  container.appendChild(header);
+
+  // Players bar
+  const playersBar = el('div', { class: 'players-bar' },
+    el('span', { class: 'players-dot' }, '●'),
+    `${players.length} participant${players.length > 1 ? 's' : ''} connecté${players.length > 1 ? 's' : ''}`,
+    players.length > 0 && el('span', { class: 'players-list' }, ' · ' + players.map(p => p.name).join(', '))
+  );
+  container.appendChild(playersBar);
+
+  // Progress
+  const progress = el('div', { class: 'progress' },
+    el('div', { class: 'progress-bar' },
+      el('div', { class: 'progress-fill', style: `width: ${((state.currentQuestion + 1) / QUESTIONS.length) * 100}%` })
+    ),
+    el('div', { class: 'progress-text' }, `Question ${state.currentQuestion + 1} / ${QUESTIONS.length}`)
+  );
+  container.appendChild(progress);
+
+  // Question card
+  const questionCard = el('div', { class: 'question-card' });
+  if (question.type === 'emotion') {
+    questionCard.appendChild(el('div', { class: 'question-tag' }, "DEVINE L'ÉMOTION"));
+    questionCard.appendChild(el('div', { class: 'emotion-big' }, question.emotion));
+    questionCard.appendChild(el('p', { class: 'question-desc' }, question.description));
+    const grid = el('div', { class: 'indices-grid' });
+    question.indices.forEach(ind => grid.appendChild(el('div', { class: 'indice-chip' }, ind)));
+    questionCard.appendChild(grid);
+    if (state.revealed) {
+      questionCard.appendChild(el('div', { class: 'reponse-box' },
+        el('div', { class: 'reponse-label' }, 'RÉPONSE'),
+        el('div', { class: 'reponse-value' }, question.reponse)
+      ));
+    }
+  } else {
+    questionCard.appendChild(el('div', { class: 'question-tag' }, `OBJECTION CLIENTE · ${question.bag}`));
+    questionCard.appendChild(el('div', { class: 'cliente-bubble' },
+      el('div', { class: 'cliente-icon' }, '👩'),
+      el('div', { class: 'cliente-text' }, '« ' + question.cliente + ' »')
+    ));
+    if (state.revealed) {
+      const respBox = el('div', { class: 'reponse-box' },
+        el('div', { class: 'reponse-label' }, 'ÉLÉMENTS DE RÉPONSE'),
+        el('div', { class: 'reponse-text' }, question.reponseAttendue)
+      );
+      const motsClesDiv = el('div', { class: 'mots-cles' });
+      question.motsCles.forEach(m => motsClesDiv.appendChild(el('span', { class: 'mot-cle' }, m)));
+      respBox.appendChild(motsClesDiv);
+      questionCard.appendChild(respBox);
+    }
+  }
+  container.appendChild(questionCard);
+
+  // Buzz alert
+  if (buzz && buzzPlayer) {
+    container.appendChild(el('div', { class: 'buzz-alert' },
+      el('div', { class: 'buzz-pulse' }),
+      el('div', { class: 'buzz-content' },
+        el('div', { class: 'buzz-label' }, '🔔 BUZZ DE'),
+        el('div', { class: 'buzz-name' }, buzzPlayer.name)
+      ),
+      el('div', { class: 'buzz-actions' },
+        el('button', { class: 'buzz-correct', onclick: () => awardPoint(buzz.playerId, 1) }, '✓ CORRECT (+1)'),
+        el('button', { class: 'buzz-wrong', onclick: rejectBuzz }, '✗ FAUX')
+      )
+    ));
+  }
+
+  // Controls
+  const controls = el('div', { class: 'controls' });
+  if (!state.revealed) {
+    controls.appendChild(el('button', { class: 'reveal-btn', onclick: revealAnswer }, '👁 RÉVÉLER LA RÉPONSE'));
+  }
+  controls.appendChild(el('div', { class: 'nav-row' },
+    el('button', {
+      class: 'nav-btn',
+      onclick: prevQuestion,
+      disabled: state.currentQuestion === 0
+    }, '◀ PRÉCÉDENT'),
+    el('button', {
+      class: 'nav-btn-primary',
+      onclick: nextQuestion
+    }, state.currentQuestion === QUESTIONS.length - 1 ? 'TERMINER ▶' : 'SUIVANT ▶')
+  ));
+  container.appendChild(controls);
+
+  // Scores panel
+  if (players.length > 0) {
+    const sorted = [...players].sort((a, b) => (scores[b.id] || 0) - (scores[a.id] || 0));
+    const panel = el('div', { class: 'scores-panel' },
+      el('div', { class: 'scores-panel-header' },
+        el('span', {}, 'SCORES EN DIRECT'),
+        el('button', { class: 'reset-btn', onclick: resetScores }, 'RESET')
+      )
+    );
+    sorted.forEach((p, i) => {
+      panel.appendChild(el('div', { class: 'score-row-live' },
+        el('span', { class: 'score-rank' }, i + 1),
+        el('span', { class: 'score-name' }, p.name),
+        el('div', { class: 'point-controls' },
+          el('button', { class: 'point-btn', onclick: () => awardPoint(p.id, -1) }, '−'),
+          el('button', { class: 'point-btn', onclick: () => awardPoint(p.id, 1) }, '+')
+        ),
+        el('span', { class: 'score-value-live' }, scores[p.id] || 0)
+      ));
+    });
+    container.appendChild(panel);
+  }
+}
+
+// === ACTIONS MASTER ===
+async function handleShare() {
+  const url = `${window.location.origin}${window.location.pathname}?code=${gameCode}`;
+  const text = `🎯 Rejoins le quiz Chloé "1 Bag = 1 Émotion" !\n\n📱 Lien : ${url}\n🔑 Code : ${gameCode}`;
+  if (navigator.share) {
+    try { await navigator.share({ title: 'Quiz Chloé', text }); } catch(e) {}
+  } else {
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  }
+}
+async function revealAnswer() {
+  await db.ref('games/' + gameCode).update({ revealed: true });
+}
+async function nextQuestion() {
+  const state = currentGameState;
+  if (state.currentQuestion < QUESTIONS.length - 1) {
+    await db.ref('games/' + gameCode).update({
+      currentQuestion: state.currentQuestion + 1,
+      buzz: null,
+      revealed: false,
+    });
+  } else {
+    await db.ref('games/' + gameCode).update({ finished: true });
+  }
+}
+async function prevQuestion() {
+  const state = currentGameState;
+  if (state.currentQuestion > 0) {
+    await db.ref('games/' + gameCode).update({
+      currentQuestion: state.currentQuestion - 1,
+      buzz: null,
+      revealed: false,
+    });
+  }
+}
+async function awardPoint(pid, points) {
+  const state = currentGameState;
+  const newScores = { ...(state.scores || {}) };
+  newScores[pid] = Math.max(0, (newScores[pid] || 0) + points);
+  await db.ref('games/' + gameCode).update({ scores: newScores, buzz: null });
+}
+async function rejectBuzz() {
+  await db.ref('games/' + gameCode).update({ buzz: null });
+}
+async function resetScores() {
+  if (confirm('Réinitialiser tous les scores ?')) {
+    await db.ref('games/' + gameCode).update({ scores: {} });
+  }
+}
+
+// === PLAYER JOIN ===
+function renderPlayerJoin() {
+  let errorDiv = null;
+  const nameInput = el('input', {
+    class: 'input',
+    type: 'text',
+    placeholder: 'Ex : Marie',
+    maxlength: 20,
+    value: playerName,
+  });
+  const codeInput = el('input', {
+    class: 'input input-code',
+    type: 'text',
+    placeholder: 'ABC123',
+    maxlength: 6,
+    value: gameCode,
+  });
+
+  const handleJoin = async () => {
+    if (!FIREBASE_CONFIGURED) {
+      alert("⚠️ Firebase n'est pas configuré. Voir le guide pour activer la synchronisation.");
+      return;
+    }
+    const name = nameInput.value.trim();
+    const code = codeInput.value.trim().toUpperCase();
+    if (!name || !code) {
+      showError('Renseigne ton nom et le code de la partie');
+      return;
+    }
+    try {
+      const snapshot = await db.ref('games/' + code).once('value');
+      if (!snapshot.exists()) {
+        showError('Code de partie invalide');
+        return;
+      }
+      const player = { id: playerId, name, joinedAt: Date.now() };
+      await db.ref(`games/${code}/players/${playerId}`).set(player);
+      playerName = name;
+      gameCode = code;
+      goTo('player-game');
+    } catch (err) {
+      showError('Erreur : ' + err.message);
+    }
+  };
+
+  const showError = (msg) => {
+    if (errorDiv) errorDiv.remove();
+    errorDiv = el('div', { class: 'error' }, msg);
+    container.insertBefore(errorDiv, button);
+  };
+
+  const button = el('button', { class: 'btn-primary', onclick: handleJoin },
+    el('span', { class: 'btn-main' }, 'ENTRER DANS LA PARTIE')
+  );
+
+  const container = el('div', { class: 'screen-inner' },
+    el('h2', { class: 'screen-title' }, 'REJOINDRE'),
+    el('p', { class: 'screen-text' }, 'Entre ton prénom et le code de la partie.'),
+    el('div', { class: 'form-group' },
+      el('label', { class: 'label' }, 'TON PRÉNOM'),
+      nameInput
+    ),
+    el('div', { class: 'form-group' },
+      el('label', { class: 'label' }, 'CODE DE LA PARTIE'),
+      codeInput
+    ),
+    button
+  );
+
+  return el('div', { class: 'screen' }, container);
+}
+
+// === PLAYER GAME ===
+function renderPlayerGame() {
+  if (!gameStateListener && FIREBASE_CONFIGURED) {
+    gameStateListener = (snapshot) => {
+      currentGameState = snapshot.val();
+      // Reset local buzz state when buzz is cleared or question changes
+      if (!currentGameState?.buzz) buzzedLocally = false;
+      renderPlayerGameContent();
+    };
+    db.ref('games/' + gameCode).on('value', gameStateListener);
+  }
+  const container = el('div', { class: 'player-screen', id: 'player-game-content' });
+  if (!currentGameState) {
+    container.appendChild(el('div', { class: 'loading' },
+      el('div', { class: 'spinner' }),
+      el('div', {}, 'Connexion…')
+    ));
+  }
+  return container;
+}
+
+function renderPlayerGameContent() {
+  const container = $('player-game-content');
+  if (!container || !currentGameState) return;
+
+  const state = currentGameState;
+  container.innerHTML = '';
+
+  if (state.finished) {
+    renderEndScreen(container, state, true);
+    return;
+  }
+
+  const question = QUESTIONS[state.currentQuestion];
+  const scores = state.scores || {};
+  const myScore = scores[playerId] || 0;
+  const isMyBuzz = state.buzz?.playerId === playerId;
+  const someoneElseBuzzed = state.buzz && !isMyBuzz;
+
+  // Header
+  container.appendChild(el('div', { class: 'player-header' },
+    el('div', {},
+      el('div', { class: 'player-name-label' }, 'JOUEUR'),
+      el('div', { class: 'player-name-value' }, playerName)
+    ),
+    el('div', { class: 'player-score-box' },
+      el('div', { class: 'player-score-label' }, 'SCORE'),
+      el('div', { class: 'player-score-value' }, myScore)
+    )
+  ));
+
+  // Progress
+  container.appendChild(el('div', { class: 'player-progress' },
+    `Question ${state.currentQuestion + 1} / ${QUESTIONS.length}`
+  ));
+
+  // Question card — masquée pour les joueurs : ils écoutent le maître du jeu
+  const card = el('div', { class: 'player-question-card' });
+  card.appendChild(el('div', { class: 'question-tag' },
+    question.type === 'emotion' ? 'DEVINE LE BAG' : 'OBJECTION CLIENTE'
+  ));
+  card.appendChild(el('div', { class: 'player-listen' },
+    el('div', { class: 'listen-icon' }, '👂'),
+    el('div', { class: 'listen-text' }, 'Écoute la question')
+  ));
+  card.appendChild(el('div', { class: 'player-hint' },
+    question.type === 'emotion'
+      ? "Le maître du jeu lit l'émotion et les indices à voix haute"
+      : 'Le maître du jeu lit la phrase de la cliente'
+  ));
+  container.appendChild(card);
+
+  // Buzzer area
+  const buzzerArea = el('div', { class: 'buzzer-area' });
+  if (state.revealed) {
+    buzzerArea.appendChild(el('div', { class: 'revealed-message' },
+      el('div', { class: 'revealed-icon' }, '👁'),
+      el('div', {}, 'Réponse révélée'),
+      el('div', { class: 'revealed-sub' }, 'En attente de la prochaine question…')
+    ));
+  } else if (isMyBuzz) {
+    buzzerArea.appendChild(el('div', { class: 'my-buzz-message' },
+      el('div', { class: 'my-buzz-icon' }, '🔔'),
+      el('div', { class: 'my-buzz-text' }, 'TU AS BUZZÉ !'),
+      el('div', { class: 'my-buzz-sub' }, 'Donne ta réponse à voix haute')
+    ));
+  } else if (someoneElseBuzzed) {
+    buzzerArea.appendChild(el('div', { class: 'other-buzz-message' },
+      el('div', { class: 'other-buzz-icon' }, '⏸'),
+      el('div', { class: 'other-buzz-text' }, state.buzz.playerName + ' a buzzé')
+    ));
+  } else {
+    const btn = el('button', {
+      class: 'buzzer-btn',
+      onclick: handleBuzz,
+      disabled: buzzedLocally
+    },
+      el('div', { class: 'buzzer-inner' },
+        el('div', { class: 'buzzer-label' }, 'BUZZ'),
+        el('div', { class: 'buzzer-sub-label' }, 'Appuie pour répondre')
+      )
+    );
+    buzzerArea.appendChild(btn);
+  }
+  container.appendChild(buzzerArea);
+}
+
+async function handleBuzz() {
+  if (buzzedLocally || currentGameState?.buzz) return;
+  buzzedLocally = true;
+  // Re-render immediately to disable button
+  renderPlayerGameContent();
+  try {
+    // Transaction to ensure only first buzz wins
+    const result = await db.ref('games/' + gameCode + '/buzz').transaction((current) => {
+      if (current === null) {
+        return { playerId, playerName, time: Date.now() };
+      }
+      return; // abort
+    });
+    if (!result.committed) {
+      buzzedLocally = false;
+      renderPlayerGameContent();
+    }
+  } catch (err) {
+    buzzedLocally = false;
+    renderPlayerGameContent();
+  }
+}
+
+// === END SCREEN ===
+function renderEndScreen(container, state, isPlayer) {
+  container.className = 'screen';
+  const inner = el('div', { class: 'screen-inner' });
+  const sorted = Object.values(state.players || {}).sort(
+    (a, b) => (state.scores?.[b.id] || 0) - (state.scores?.[a.id] || 0)
+  );
+
+  if (isPlayer) {
+    const myScore = state.scores?.[playerId] || 0;
+    const myRank = sorted.findIndex(p => p.id === playerId) + 1;
+    inner.appendChild(el('h2', { class: 'screen-title' }, '🏆 PARTIE TERMINÉE'));
+    inner.appendChild(el('div', { class: 'my-result' },
+      el('div', { class: 'my-result-label' }, 'TON RÉSULTAT'),
+      el('div', { class: 'my-result-rank' }, '#' + myRank),
+      el('div', { class: 'my-result-score' }, myScore + ' points')
+    ));
+  } else {
+    inner.appendChild(el('h2', { class: 'screen-title' }, '🏆 FIN DE LA PARTIE'));
+    const podium = el('div', { class: 'podium' });
+    sorted.slice(0, 3).forEach((p, i) => {
+      podium.appendChild(el('div', { class: 'podium-player' + (i === 0 ? ' podium-first' : '') },
+        el('div', { class: 'podium-rank' }, ['🥇', '🥈', '🥉'][i]),
+        el('div', { class: 'podium-name' }, p.name),
+        el('div', { class: 'podium-score' }, (state.scores?.[p.id] || 0) + ' pts')
+      ));
+    });
+    inner.appendChild(podium);
+  }
+
+  const scoresList = el('div', { class: 'all-scores' });
+  sorted.forEach((p, i) => {
+    const row = el('div', { class: 'score-row' + (p.id === playerId && isPlayer ? ' score-row-me' : '') },
+      el('span', {}, `${i + 1}. ${p.name}${p.id === playerId && isPlayer ? ' (toi)' : ''}`),
+      el('span', { class: 'score-value' }, state.scores?.[p.id] || 0)
+    );
+    scoresList.appendChild(row);
+  });
+  inner.appendChild(scoresList);
+
+  if (!isPlayer) {
+    inner.appendChild(el('button', { class: 'btn-secondary', onclick: () => {
+      if (gameStateListener) {
+        db.ref('games/' + gameCode).off('value', gameStateListener);
+        gameStateListener = null;
+      }
+      currentGameState = null;
+      buzzedLocally = false;
+      gameCode = '';
+      goTo('home');
+    } },
+      el('span', { class: 'btn-main' }, 'NOUVELLE PARTIE')
+    ));
+  }
+
+  container.innerHTML = '';
+  container.appendChild(inner);
+}
+
+// === INIT ===
+render();
+</script>
+</body>
+</html>
