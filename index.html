@@ -278,16 +278,16 @@ const ROUNDS = [
   },
   {
     id: 2,
-    name: 'MANCHE 2 — 1 ÉMOTION = 1 BAG (~2 min)',
-    description: 'Je vous donne une émotion. Trouvez le bag correspondant. Le premier qui buzz répond.',
+    name: 'MANCHE 2 — 1 ÉMOTION = 1 SAC (~2 min)',
+    description: 'Je vous donne une émotion. Trouvez le sac correspondant. Le premier qui buzz répond.',
     type: 'buzz_emotion',
     questions: [
       { emotion: 'EFFORTLESS', indices: [], description: "Le tote effortless du quotidien.", a: 'Chloé Spin' },
       { emotion: 'DÉSIR DE VACANCES', indices: [], description: "L'impression d'être en vacances toute l'année.", a: 'Summer Banana' },
       { emotion: 'SÉDUCTION', indices: [], description: "Le bijou bag qui attire tous les regards.", a: 'Bracelet Bag' },
-      { emotion: 'NOSTALGIE', indices: [], description: "Le bag iconique qu'on garde pour toujours.", a: 'Paddington' },
+      { emotion: 'NOSTALGIE', indices: [], description: "Le sac iconique qu'on garde pour toujours.", a: 'Paddington' },
       { emotion: 'SÉRÉNITÉ', indices: [], description: 'Une silhouette douce, féminine et équilibrée.', a: 'Marcie' },
-      { emotion: 'CULOT', indices: [], description: 'Le statement bag qui ne passe jamais inaperçu.', a: 'Chloé Plissé' },
+      { emotion: 'CULOT', indices: [], description: 'Le statement sac qui ne passe jamais inaperçu.', a: 'Chloé Plissé' },
     ],
   },
   {
@@ -313,7 +313,7 @@ const ROUNDS = [
   {
     id: 4,
     name: "MANCHE 4 — VENDS L'ÉMOTION (~2 min)",
-    description: "j'affiche un bag → l'app tire au sort 1 participant → cette personne doit vendre le bag en 1 phrase émotionnelle.",
+    description: "j'affiche un sac → l'app tire au sort 1 participant → cette personne doit vendre le sac en 1 phrase émotionnelle.",
     type: 'draw_pitch',
     questions: [
       { bag: 'Chloé Spin', emotion: 'EFFORTLESS', hint: 'Le tote effortless du quotidien' },
@@ -678,11 +678,12 @@ function renderRound4(container, question, state, players, qIdx, round) {
 
   const currentBag = question.bag;
   const drawnPlayerId = assignments[currentBag];
-  const drawnPlayer = drawnPlayerId ? state.players[drawnPlayerId] : null;
+  // Si le joueur tiré s'est déconnecté, on considère le sac comme non-attribué (re-tirage possible)
+  const drawnPlayer = (drawnPlayerId && state.players && state.players[drawnPlayerId]) ? state.players[drawnPlayerId] : null;
 
   const drawArea = el('div', { class: 'draw-area' });
   
-  drawArea.appendChild(el('div', { class: 'draw-label' }, 'LE BAG À VENDRE'));
+  drawArea.appendChild(el('div', { class: 'draw-label' }, 'LE SAC À VENDRE'));
   drawArea.appendChild(el('div', { class: 'draw-bag' }, currentBag));
   
   drawArea.appendChild(el('div', { class: 'draw-arrow' }, '↓'));
@@ -694,7 +695,7 @@ function renderRound4(container, question, state, players, qIdx, round) {
   if (!drawnPlayer) {
     if (availablePlayers.length === 0) {
       drawArea.appendChild(el('div', { class: 'question-desc', style: 'color:#FBF7F0; opacity:0.8; margin-top:12px' },
-        'Tous les participants ont déjà eu un bag. Tu peux passer cette question.'));
+        'Tous les participants ont déjà eu un sac. Tu peux passer cette question.'));
     } else {
       drawArea.appendChild(el('button', {
         class: 'draw-btn',
@@ -712,6 +713,11 @@ function renderRound4(container, question, state, players, qIdx, round) {
       style: 'background:#FBF7F0;border:1.5px solid #FBF7F0;margin-top:6px',
       onclick: () => skipPitchR4()
     }, 'PASSER (pas de point)'));
+    drawArea.appendChild(el('button', {
+      class: 'draw-btn',
+      style: 'background:transparent;border:1px solid rgba(251,247,240,0.4);color:#FBF7F0;margin-top:6px;font-size:11px',
+      onclick: () => redrawPlayer(currentBag)
+    }, '🔄 RE-TIRER UN·E AUTRE PARTICIPANT·E'));
   }
 
   container.appendChild(drawArea);
@@ -751,7 +757,7 @@ function renderControlsRound4(container, state) {
   controls.appendChild(el('div', { class: 'nav-row' },
     el('button', { class: 'nav-btn', onclick: prevQuestion, disabled: state.globalQuestionIdx === 0 }, '◀ PRÉCÉDENT'),
     el('button', { class: 'nav-btn-primary', onclick: nextQuestion },
-      state.globalQuestionIdx === TOTAL_QUESTIONS - 1 ? 'TERMINER ▶' : 'PASSER AU BAG SUIVANT ▶')
+      state.globalQuestionIdx === TOTAL_QUESTIONS - 1 ? 'TERMINER ▶' : 'PASSER AU SAC SUIVANT ▶')
   ));
   container.appendChild(controls);
 }
@@ -841,12 +847,13 @@ async function drawPlayer(bag, availablePlayers) {
   setTimeout(async () => {
     const idx = Math.floor(Math.random() * availablePlayers.length);
     const chosen = availablePlayers[idx];
-    const newAssignments = { ...(currentGameState.assignments || {}) };
-    newAssignments[bag] = chosen.id;
-    await db.ref('games/' + gameCode).update({
-      assignments: newAssignments,
-      drawing: false,
+    // Transaction sur assignments pour éviter d'écraser une attribution concurrente
+    await db.ref('games/' + gameCode + '/assignments').transaction((current) => {
+      const a = current || {};
+      a[bag] = chosen.id;
+      return a;
     });
+    await db.ref('games/' + gameCode).update({ drawing: false });
   }, 1500);
 }
 
@@ -860,6 +867,11 @@ async function awardPointR4(pid) {
 
 async function skipPitchR4() {
   await nextQuestion();
+}
+
+// Manche 4 : re-tirer (efface l'assignation du sac courant)
+async function redrawPlayer(bag) {
+  await db.ref('games/' + gameCode + '/assignments/' + bag).remove();
 }
 
 // === PLAYER JOIN ===
@@ -1009,7 +1021,7 @@ function renderPlayerGameContent() {
       const drawnPlayer = state.players[drawnPlayerId];
       buzzerArea.appendChild(el('div', { class: 'player-waiting-draw' },
         el('div', { class: 'player-waiting-icon' }, '👂'),
-        el('div', { class: 'player-waiting-text' }, drawnPlayer?.name + ' pitche'),
+        el('div', { class: 'player-waiting-text' }, drawnPlayer ? drawnPlayer.name + ' pitche' : 'Pitch en cours'),
         el('div', { class: 'player-waiting-sub' }, 'Écoute son pitch émotionnel')
       ));
     } else if (state.drawing) {
