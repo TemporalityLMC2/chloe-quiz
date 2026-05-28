@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -227,6 +226,34 @@
 
   .loading { min-height: 100vh; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 16px; font-family: 'Cormorant Garamond', serif; font-size: 22px; font-style: italic; color: #3A3530; }
   .spinner { width: 32px; height: 32px; border: 2px solid #E8DFD0; border-top-color: #1A1614; border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+  /* === FEEDBACK === */
+  .feedback-box { background: #FBF7F0; border: 1px solid #E8DFD0; padding: 20px; margin-bottom: 24px; }
+  .feedback-title { font-size: 10px; letter-spacing: 2.5px; font-weight: 700; color: #8B4513; margin-bottom: 16px; }
+  .feedback-section-label { font-size: 10px; letter-spacing: 2px; font-weight: 700; margin: 12px 0 8px; color: #3A3530; }
+  .feedback-section-label.green { color: #2E7D32; }
+  .feedback-section-label.orange { color: #C45A00; }
+  .feedback-item { padding: 12px; margin-bottom: 8px; border: 1px solid #E8DFD0; }
+  .feedback-item.strong { background: #F0F7F0; border-color: #A8D5AA; }
+  .feedback-item.improve { background: #FFF8F0; border-color: #E8C88A; }
+  .feedback-item-top { display: flex; align-items: center; gap: 10px; }
+  .feedback-icon { font-size: 20px; flex-shrink: 0; }
+  .feedback-skill { flex: 1; font-size: 14px; font-weight: 600; color: #1A1614; }
+  .feedback-pts { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #C9A876; }
+  .feedback-tip { font-size: 12px; line-height: 1.6; color: #3A3530; font-style: italic; font-family: 'Cormorant Garamond', serif; margin-top: 10px; padding-top: 10px; border-top: 1px solid #E8DFD0; }
+  .feedback-perfect { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-style: italic; color: #2E7D32; text-align: center; padding: 16px; }
+
+  /* === MASTER FEEDBACK === */
+  .master-feedback { background: #FBF7F0; border: 1px solid #E8DFD0; padding: 16px; margin-bottom: 20px; }
+  .master-feedback-row { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid #E8DFD0; }
+  .master-feedback-row:last-of-type { border-bottom: none; }
+  .master-feedback-name { font-size: 13px; font-weight: 600; flex: 1; min-width: 80px; }
+  .master-feedback-rounds { display: flex; gap: 8px; }
+  .master-feedback-cell { text-align: center; min-width: 36px; }
+  .mfc-icon { font-size: 16px; }
+  .mfc-score { font-family: 'Cormorant Garamond', serif; font-size: 18px; font-weight: 600; color: #1A1614; }
+  .master-feedback-legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding-top: 12px; border-top: 1px solid #E8DFD0; }
+  .legend-item { font-size: 11px; color: #3A3530; background: #F5EFE6; padding: 4px 8px; }
   .config-warning { background: #FFE4B5; border: 1px solid #DEB887; padding: 16px; margin-bottom: 24px; font-size: 13px; line-height: 1.5; color: #5C3317; }
   .config-warning strong { display: block; margin-bottom: 6px; }
 </style>
@@ -263,7 +290,7 @@ if (FIREBASE_CONFIGURED) {
 const ROUNDS = [
   {
     id: 1,
-    name: 'MANCHE 1 — QUIZ SPEED (~2 min)',
+    name: 'MANCHE 1 — QUIZ SPEED (~2 min)', shortName: 'Quiz rapide',
     description: 'Questions factuelles sur les sacs. Le premier qui buzz répond.',
     type: 'buzz_factual',
     questions: [
@@ -279,7 +306,7 @@ const ROUNDS = [
   },
   {
     id: 2,
-    name: 'MANCHE 2 — 1 ÉMOTION = 1 SAC (~2 min)',
+    name: 'MANCHE 2 — 1 ÉMOTION = 1 SAC (~2 min)', shortName: '1 Émotion = 1 Sac',
     description: 'Je vous donne une émotion. Trouvez le sac correspondant. Le premier qui buzz répond.',
     type: 'buzz_emotion',
     questions: [
@@ -293,7 +320,7 @@ const ROUNDS = [
   },
   {
     id: 3,
-    name: 'MANCHE 3 — OBJECTIONS LIBRES (~4 min)',
+    name: 'MANCHE 3 — OBJECTIONS LIBRES (~4 min)', shortName: 'Objections',
     description: "je donne une objection cliente → quelqu'un buzz → il répond librement → le groupe en discute et on attribues le point. ou pas si qqun a quelquechose de mieux",
     type: 'buzz_free',
     questions: [
@@ -313,7 +340,7 @@ const ROUNDS = [
   },
   {
     id: 4,
-    name: "MANCHE 4 — VENDS L'ÉMOTION (~2 min)",
+    name: "MANCHE 4 — VENDS L'ÉMOTION (~2 min)", shortName: 'Pitch émotionnel',
     description: "j'affiche un sac → l'app tire au sort 1 participant → cette personne doit vendre le sac en 1 phrase émotionnelle.",
     type: 'draw_pitch',
     questions: [
@@ -532,7 +559,7 @@ function renderMasterGameContent() {
 
   container.appendChild(el('div', { class: 'round-banner' },
     el('div', { class: 'round-banner-left' },
-      el('div', { class: 'round-banner-name' }, `Manche ${roundIdx + 1}`)
+      el('div', { class: 'round-banner-name' }, `Manche ${roundIdx + 1} · ${round.shortName}`)
     ),
     el('div', { class: 'round-banner-prog' }, `${qIdx + 1}/${round.questions.length}`)
   ));
@@ -823,13 +850,22 @@ async function awardPoint(pid, points) {
   const state = currentGameState;
   const newScores = { ...(state.scores || {}) };
   newScores[pid] = Math.max(0, (newScores[pid] || 0) + points);
-  await db.ref('games/' + gameCode).update({ scores: newScores, buzz: null });
+  // Tracker par manche
+  const ctx = globalIndexToRound(state.globalQuestionIdx);
+  const roundKey = ctx ? `r${ctx.roundIdx + 1}` : 'r1';
+  const newRoundScores = { ...(state.roundScores || {}) };
+  if (!newRoundScores[pid]) newRoundScores[pid] = {};
+  if (points > 0) newRoundScores[pid][roundKey] = (newRoundScores[pid][roundKey] || 0) + points;
+  await db.ref('games/' + gameCode).update({ scores: newScores, roundScores: newRoundScores, buzz: null });
 }
 async function awardPointR3(pid) {
   const state = currentGameState;
   const newScores = { ...(state.scores || {}) };
   newScores[pid] = (newScores[pid] || 0) + 1;
-  await db.ref('games/' + gameCode).update({ scores: newScores, buzz: null });
+  const newRoundScores = { ...(state.roundScores || {}) };
+  if (!newRoundScores[pid]) newRoundScores[pid] = {};
+  newRoundScores[pid]['r3'] = (newRoundScores[pid]['r3'] || 0) + 1;
+  await db.ref('games/' + gameCode).update({ scores: newScores, roundScores: newRoundScores, buzz: null });
 }
 async function rejectBuzz() {
   await db.ref('games/' + gameCode).update({ buzz: null });
@@ -860,7 +896,10 @@ async function awardPointR4(pid) {
   const state = currentGameState;
   const newScores = { ...(state.scores || {}) };
   newScores[pid] = (newScores[pid] || 0) + 1;
-  await db.ref('games/' + gameCode).update({ scores: newScores });
+  const newRoundScores = { ...(state.roundScores || {}) };
+  if (!newRoundScores[pid]) newRoundScores[pid] = {};
+  newRoundScores[pid]['r4'] = (newRoundScores[pid]['r4'] || 0) + 1;
+  await db.ref('games/' + gameCode).update({ scores: newScores, roundScores: newRoundScores });
   setTimeout(() => nextQuestion(), 800);
 }
 
@@ -971,7 +1010,7 @@ function renderPlayerGameContent() {
 
   // Round banner
   container.appendChild(el('div', { class: 'player-round-banner' },
-    el('div', { class: 'player-round-name' }, `Manche ${roundIdx + 1}`),
+    el('div', { class: 'player-round-name' }, `Manche ${roundIdx + 1} · ${round.shortName}`),
     el('div', { class: 'player-round-prog' }, `${qIdx + 1}/${round.questions.length}`)
   ));
 
@@ -1088,6 +1127,14 @@ async function handleBuzz() {
 }
 
 // === END SCREEN ===
+// Définition des skills par manche
+const ROUND_SKILLS = {
+  r1: { label: 'Connaissance produit', icon: '📚', tip: 'Revois les fiches produits — dates de lancement, matières, signatures, chiffres clés de chaque sac.' },
+  r2: { label: 'Lien sac-émotion', icon: '💛', tip: 'Entraîne-toi à associer chaque sac à son émotion : Spin = Effortless, Paddington = Nostalgie, Marcie = Sérénité, Bracelet = Séduction, Summer Banana = Holidays, Plissé = Boldness.' },
+  r3: { label: 'Gestion des objections', icon: '🎯', tip: 'Travaille les réponses aux objections clientes : valorise le design, le savoir-faire, l\'histoire du sac plutôt que de défendre.' },
+  r4: { label: 'Storytelling & discours de vente', icon: '✨', tip: 'Entraîne-toi à vendre une émotion, pas un produit. Une phrase, une image, un sentiment — c\'est ça qui fait la différence.' },
+};
+
 function renderEndScreen(container, state, isPlayer) {
   container.className = 'screen';
   const inner = el('div', { class: 'screen-inner' });
@@ -1098,14 +1145,87 @@ function renderEndScreen(container, state, isPlayer) {
   if (isPlayer) {
     const myScore = state.scores?.[playerId] || 0;
     const myRank = sorted.findIndex(p => p.id === playerId) + 1;
-    inner.appendChild(el('h2', { class: 'screen-title' }, '🏆 PARTIE TERMINÉE'));
+    const myRoundScores = state.roundScores?.[playerId] || {};
+
+    inner.appendChild(el('h2', { class: 'screen-title' }, '🏆 Partie terminée'));
+
+    // Résultat global
     inner.appendChild(el('div', { class: 'my-result' },
       el('div', { class: 'my-result-label' }, 'TON RÉSULTAT'),
       el('div', { class: 'my-result-rank' }, '#' + myRank),
-      el('div', { class: 'my-result-score' }, myScore + ' points')
+      el('div', { class: 'my-result-score' }, myScore + ' point' + (myScore > 1 ? 's' : ''))
     ));
+
+    // Feedback personnalisé
+    const feedbackBox = el('div', { class: 'feedback-box' });
+    feedbackBox.appendChild(el('div', { class: 'feedback-title' }, '📋 TON FEEDBACK PERSONNALISÉ'));
+
+    // Calcul des manches où le joueur n'a pas marqué
+    const totalByRound = { r1: 8, r2: 6, r3: 4, r4: 6 };
+    const toImprove = [];
+    const strong = [];
+
+    Object.entries(ROUND_SKILLS).forEach(([key, skill]) => {
+      const got = myRoundScores[key] || 0;
+      const total = totalByRound[key];
+      const ratio = got / total;
+      if (ratio === 0) toImprove.push({ key, skill, got, total, level: 'À travailler' });
+      else if (ratio < 0.5) toImprove.push({ key, skill, got, total, level: 'À renforcer' });
+      else strong.push({ key, skill, got, total });
+    });
+
+    // Points forts
+    if (strong.length > 0) {
+      feedbackBox.appendChild(el('div', { class: 'feedback-section-label green' }, '✅ TES POINTS FORTS'));
+      strong.forEach(({ skill, got, total }) => {
+        feedbackBox.appendChild(el('div', { class: 'feedback-item strong' },
+          el('div', { class: 'feedback-item-top' },
+            el('span', { class: 'feedback-icon' }, skill.icon),
+            el('span', { class: 'feedback-skill' }, skill.label),
+            el('span', { class: 'feedback-pts' }, `${got}/${total}`)
+          )
+        ));
+      });
+    }
+
+    // À améliorer
+    if (toImprove.length > 0) {
+      feedbackBox.appendChild(el('div', { class: 'feedback-section-label orange' }, '💪 À TRAVAILLER'));
+      toImprove.forEach(({ skill, got, total, level }) => {
+        feedbackBox.appendChild(el('div', { class: 'feedback-item improve' },
+          el('div', { class: 'feedback-item-top' },
+            el('span', { class: 'feedback-icon' }, skill.icon),
+            el('span', { class: 'feedback-skill' }, skill.label),
+            el('span', { class: 'feedback-pts' }, `${got}/${total}`)
+          ),
+          el('div', { class: 'feedback-tip' }, skill.tip)
+        ));
+      });
+    }
+
+    if (toImprove.length === 0) {
+      feedbackBox.appendChild(el('div', { class: 'feedback-perfect' },
+        '🌟 Excellent sur toutes les manches — tu maîtrises parfaitement !'
+      ));
+    }
+
+    inner.appendChild(feedbackBox);
+
+    // Classement complet
+    const scoresList = el('div', { class: 'all-scores' },
+      el('div', { class: 'feedback-section-label' }, 'CLASSEMENT')
+    );
+    sorted.forEach((p, i) => {
+      scoresList.appendChild(el('div', { class: 'score-row' + (p.id === playerId ? ' score-row-me' : '') },
+        el('span', {}, `${i + 1}. ${p.name}${p.id === playerId ? ' (toi)' : ''}`),
+        el('span', { class: 'score-value' }, state.scores?.[p.id] || 0)
+      ));
+    });
+    inner.appendChild(scoresList);
+
   } else {
-    inner.appendChild(el('h2', { class: 'screen-title' }, '🏆 FIN DE LA PARTIE'));
+    // VUE MAÎTRE DU JEU
+    inner.appendChild(el('h2', { class: 'screen-title' }, '🏆 Fin de la partie'));
     const podium = el('div', { class: 'podium' });
     sorted.slice(0, 3).forEach((p, i) => {
       podium.appendChild(el('div', { class: 'podium-player' + (i === 0 ? ' podium-first' : '') },
@@ -1115,19 +1235,44 @@ function renderEndScreen(container, state, isPlayer) {
       ));
     });
     inner.appendChild(podium);
-  }
 
-  const scoresList = el('div', { class: 'all-scores' });
-  sorted.forEach((p, i) => {
-    const row = el('div', { class: 'score-row' + (p.id === playerId && isPlayer ? ' score-row-me' : '') },
-      el('span', {}, `${i + 1}. ${p.name}${p.id === playerId && isPlayer ? ' (toi)' : ''}`),
-      el('span', { class: 'score-value' }, state.scores?.[p.id] || 0)
-    );
-    scoresList.appendChild(row);
-  });
-  inner.appendChild(scoresList);
+    // Tableau des scores par manche pour le maître
+    const masterFeedback = el('div', { class: 'master-feedback' });
+    masterFeedback.appendChild(el('div', { class: 'feedback-title' }, '📊 DÉTAIL PAR MANCHE'));
 
-  if (!isPlayer) {
+    sorted.forEach((p) => {
+      const rs = state.roundScores?.[p.id] || {};
+      const row = el('div', { class: 'master-feedback-row' },
+        el('div', { class: 'master-feedback-name' }, p.name),
+        el('div', { class: 'master-feedback-rounds' },
+          ...Object.entries(ROUND_SKILLS).map(([key, skill]) =>
+            el('div', { class: 'master-feedback-cell' },
+              el('div', { class: 'mfc-icon' }, skill.icon),
+              el('div', { class: 'mfc-score' }, (rs[key] || 0))
+            )
+          )
+        )
+      );
+      masterFeedback.appendChild(row);
+    });
+
+    // Légende
+    const legend = el('div', { class: 'master-feedback-legend' });
+    Object.entries(ROUND_SKILLS).forEach(([, skill]) => {
+      legend.appendChild(el('span', { class: 'legend-item' }, `${skill.icon} ${skill.label}`));
+    });
+    masterFeedback.appendChild(legend);
+    inner.appendChild(masterFeedback);
+
+    const scoresList = el('div', { class: 'all-scores' });
+    sorted.forEach((p, i) => {
+      scoresList.appendChild(el('div', { class: 'score-row' },
+        el('span', {}, `${i + 1}. ${p.name}`),
+        el('span', { class: 'score-value' }, state.scores?.[p.id] || 0)
+      ));
+    });
+    inner.appendChild(scoresList);
+
     inner.appendChild(el('button', { class: 'btn-secondary', onclick: () => {
       if (gameStateListener) {
         db.ref('games/' + gameCode).off('value', gameStateListener);
