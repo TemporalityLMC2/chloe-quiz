@@ -530,10 +530,12 @@ function renderMasterGameContent() {
   ));
 
   // Round banner
+  // On extrait juste le thème : "MANCHE 2 — 1 ÉMOTION = 1 SAC (~2 min)" -> "1 ÉMOTION = 1 SAC"
+  const shortName = round.name.replace(/^MANCHE\s*\d+\s*[—-]\s*/i, '').replace(/\s*\(~?[^)]*\)\s*$/, '').trim();
   container.appendChild(el('div', { class: 'round-banner' },
     el('div', { class: 'round-banner-left' },
       el('div', { class: 'round-banner-label' }, `MANCHE ${roundIdx + 1} / ${ROUNDS.length}`),
-      el('div', { class: 'round-banner-name' }, round.name)
+      el('div', { class: 'round-banner-name' }, shortName)
     ),
     el('div', { class: 'round-banner-prog' }, `${qIdx + 1}/${round.questions.length}`)
   ));
@@ -971,8 +973,9 @@ function renderPlayerGameContent() {
   ));
 
   // Round banner
+  const shortNameP = round.name.replace(/^MANCHE\s*\d+\s*[—-]\s*/i, '').replace(/\s*\(~?[^)]*\)\s*$/, '').trim();
   container.appendChild(el('div', { class: 'player-round-banner' },
-    el('div', { class: 'player-round-name' }, `M${roundIdx + 1} · ${round.name}`),
+    el('div', { class: 'player-round-name' }, `Manche ${roundIdx + 1} · ${shortNameP}`),
     el('div', { class: 'player-round-prog' }, `${qIdx + 1}/${round.questions.length}`)
   ));
 
