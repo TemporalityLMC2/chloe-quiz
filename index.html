@@ -1389,9 +1389,30 @@ function renderPlayerGameContent() {
   container.appendChild(buzzerArea);
 }
 
+// === SON DE BUZZ ===
+function playBuzzSound() {
+  try {
+    const ctx = new (window.AudioContext || window.webkitAudioContext)();
+    // Son de buzz : onde carrée courte + descente rapide
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.type = 'square';
+    osc.frequency.setValueAtTime(220, ctx.currentTime);
+    osc.frequency.exponentialRampToValueAtTime(110, ctx.currentTime + 0.15);
+    gain.gain.setValueAtTime(0.6, ctx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.3);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + 0.3);
+  } catch(e) {}
+}
+
 async function handleBuzz() {
   if (buzzedLocally || currentGameState?.buzz) return;
   buzzedLocally = true;
+  playBuzzSound();
+  if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
   renderPlayerGameContent();
   try {
     const result = await db.ref('games/' + gameCode + '/buzz').transaction((current) => {
