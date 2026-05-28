@@ -256,6 +256,22 @@
   .legend-item { font-size: 11px; color: #3A3530; background: #F5EFE6; padding: 4px 8px; }
   .config-warning { background: #FFE4B5; border: 1px solid #DEB887; padding: 16px; margin-bottom: 24px; font-size: 13px; line-height: 1.5; color: #5C3317; }
   .config-warning strong { display: block; margin-bottom: 6px; }
+
+  /* === BOUTIQUE & ÉDITEUR === */
+  .boutique-btn { background: transparent; border: none; color: #3A3530; font-size: 12px; letter-spacing: 1.5px; padding: 8px 0; margin-bottom: 16px; text-decoration: underline; text-underline-offset: 3px; display: block; width: 100%; text-align: center; cursor: pointer; }
+  .editor-tabs { display: flex; gap: 4px; margin-bottom: 20px; flex-wrap: wrap; }
+  .editor-tab { background: #E8DFD0; border: none; padding: 10px 14px; font-size: 11px; font-weight: 700; letter-spacing: 1px; color: #3A3530; cursor: pointer; border-bottom: 3px solid transparent; flex: 1; text-align: center; min-width: 70px; }
+  .editor-tab.active { background: #FBF7F0; color: #1A1614; border-bottom: 3px solid #C9A876; }
+  .editor-card { background: #FBF7F0; border: 1px solid #E8DFD0; padding: 16px; margin-bottom: 12px; }
+  .editor-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .editor-card-num { font-family: 'Cormorant Garamond', serif; font-size: 20px; font-weight: 600; color: #C9A876; }
+  .editor-delete-btn { background: transparent; border: 1px solid #E8DFD0; color: #8B0000; font-size: 12px; padding: 4px 8px; cursor: pointer; }
+  .editor-field-group { margin-bottom: 10px; }
+  .editor-field-label { display: block; font-size: 9px; letter-spacing: 2px; font-weight: 700; color: #8B4513; margin-bottom: 4px; }
+  .editor-field { width: 100%; padding: 10px 12px; font-size: 13px; background: #F5EFE6; border: 1px solid #E8DFD0; color: #1A1614; resize: vertical; font-family: inherit; line-height: 1.5; }
+  .editor-save-btn { background: #1A1614; color: #FBF7F0; border: none; padding: 10px 16px; font-size: 11px; font-weight: 700; letter-spacing: 1.5px; margin-top: 8px; width: 100%; cursor: pointer; }
+  .editor-add-btn { width: 100%; background: transparent; border: 1.5px dashed #C9A876; color: #8B4513; padding: 14px; font-size: 12px; font-weight: 700; letter-spacing: 1.5px; margin-bottom: 12px; cursor: pointer; }
+  .editor-reset-btn { width: 100%; background: transparent; border: none; color: #3A3530; font-size: 11px; padding: 8px; text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -285,9 +301,10 @@ if (FIREBASE_CONFIGURED) {
 }
 
 // ============================================================
-// 🎯 STRUCTURE DU JEU — 4 MANCHES
+// 🏪 GESTION BOUTIQUE
 // ============================================================
-const ROUNDS = [
+// Les questions par défaut (celles déjà dans le fichier)
+const DEFAULT_ROUNDS = [
   {
     id: 1,
     name: 'MANCHE 1 — QUIZ SPEED (~2 min)', shortName: 'Quiz rapide',
@@ -321,7 +338,7 @@ const ROUNDS = [
   {
     id: 3,
     name: 'MANCHE 3 — OBJECTIONS LIBRES (~4 min)', shortName: 'Objections',
-    description: "je donne une objection cliente → quelqu'un buzz → il répond librement → le groupe en discute et on attribues le point. ou pas si qqun a quelquechose de mieux",
+    description: "je donne une objection cliente → quelqu'un buzz → il répond librement → le groupe en discute et on attribues le point.",
     type: 'buzz_free',
     questions: [
       { bag: 'Chloé Spin', cliente: 'Je trouve le sac trop simple.',
@@ -345,17 +362,75 @@ const ROUNDS = [
     type: 'draw_pitch',
     questions: [
       { bag: 'Chloé Spin', emotion: 'EFFORTLESS', hint: 'Le tote effortless du quotidien' },
-      { bag: 'Summer Banana' },
-      { bag: 'Bracelet Bag' },
-      { bag: 'Paddington' },
-      { bag: 'Marcie' },
-      { bag: 'Chloé Plissé' }
-    ]
-  }
+      { bag: 'Summer Banana', emotion: 'DÉSIR DE VACANCES', hint: 'Vacances toute l\'année, raffia, easygoing' },
+      { bag: 'Bracelet Bag', emotion: 'SÉDUCTION', hint: 'Bijou bag, day-to-evening, sophistiqué' },
+      { bag: 'Paddington', emotion: 'NOSTALGIE', hint: 'Iconique, heritage, the bag you keep forever' },
+      { bag: 'Marcie', emotion: 'SÉRÉNITÉ', hint: 'Féminin, gracieux, équilibré, comforting' },
+      { bag: 'Chloé Plissé', emotion: 'CULOT', hint: 'Statement piece, design unique, intricate' },
+    ],
+  },
 ];
 
-// Compter total questions
-const TOTAL_QUESTIONS = ROUNDS.reduce((sum, r) => sum + r.questions.length, 0);
+// Identifiant boutique stocké localement
+let boutiqueId = localStorage.getItem('chloe_boutique_id') || null;
+let boutiqueName = localStorage.getItem('chloe_boutique_name') || null;
+
+// Les rounds actifs (par défaut = DEFAULT_ROUNDS, remplacés si la boutique a des questions perso)
+let ROUNDS = JSON.parse(JSON.stringify(DEFAULT_ROUNDS));
+
+// Charger les questions perso de la boutique depuis Firebase
+async function loadBoutiqueRounds() {
+  if (!boutiqueId || !FIREBASE_CONFIGURED) return;
+  try {
+    const snap = await db.ref(`boutiques/${boutiqueId}/rounds`).once('value');
+    if (snap.exists()) {
+      const saved = snap.val();
+      // Fusionner avec les rounds par défaut (structure) en remplaçant les questions
+      ROUNDS = DEFAULT_ROUNDS.map((defaultRound, i) => {
+        const savedRound = saved[i];
+        if (savedRound && savedRound.questions && savedRound.questions.length > 0) {
+          return { ...defaultRound, questions: savedRound.questions };
+        }
+        return defaultRound;
+      });
+    }
+  } catch(e) {
+    console.error('Erreur chargement boutique:', e);
+  }
+}
+
+// Sauvegarder les questions d'une manche pour cette boutique
+async function saveBoutiqueRounds() {
+  if (!boutiqueId || !FIREBASE_CONFIGURED) return;
+  const toSave = ROUNDS.map(r => ({ questions: r.questions }));
+  await db.ref(`boutiques/${boutiqueId}/rounds`).set(toSave);
+  await db.ref(`boutiques/${boutiqueId}/name`).set(boutiqueName);
+}
+
+// Créer ou récupérer l'ID boutique
+async function setupBoutique(name) {
+  // On crée un ID simple basé sur le nom (lowercase, sans espaces)
+  const id = name.toLowerCase().replace(/[^a-z0-9]/g, '_').substring(0, 30);
+  boutiqueId = id;
+  boutiqueName = name;
+  localStorage.setItem('chloe_boutique_id', id);
+  localStorage.setItem('chloe_boutique_name', name);
+  // Vérifier si la boutique existe déjà
+  const snap = await db.ref(`boutiques/${id}`).once('value');
+  if (!snap.exists()) {
+    // Nouvelle boutique : sauvegarder les questions par défaut
+    await saveBoutiqueRounds();
+  } else {
+    // Boutique existante : charger ses questions
+    await loadBoutiqueRounds();
+  }
+}
+
+// Compter total questions (dynamique car ROUNDS peut changer)
+let TOTAL_QUESTIONS = ROUNDS.reduce((sum, r) => sum + r.questions.length, 0);
+function refreshTotalQuestions() {
+  TOTAL_QUESTIONS = ROUNDS.reduce((sum, r) => sum + r.questions.length, 0);
+}
 
 // Convertir indice global -> manche + index dans manche
 function globalIndexToRound(globalIdx) {
@@ -417,6 +492,8 @@ function render() {
   const app = $('app');
   app.innerHTML = '';
   if (currentView === 'home') app.appendChild(renderHome());
+  else if (currentView === 'boutique-setup') app.appendChild(renderBoutiqueSetup());
+  else if (currentView === 'editor') app.appendChild(renderEditor());
   else if (currentView === 'master-setup') app.appendChild(renderMasterSetup());
   else if (currentView === 'master-game') app.appendChild(renderMasterGame());
   else if (currentView === 'player-join') app.appendChild(renderPlayerJoin());
@@ -453,8 +530,213 @@ function renderHome() {
           el('span', { class: 'btn-main' }, 'PARTICIPANT·E')
         )
       ),
+      // Bouton boutique discret en bas
+      el('button', {
+        class: 'boutique-btn',
+        onclick: () => goTo('boutique-setup')
+      }, boutiqueName ? `🏪 ${boutiqueName}` : '🏪 Configurer ma boutique'),
       el('div', { class: 'footer' }, 'Quiz · Émotions · Objections · Pitch')
     )
+  );
+}
+
+// === BOUTIQUE SETUP ===
+function renderBoutiqueSetup() {
+  const nameInput = el('input', {
+    class: 'input',
+    type: 'text',
+    placeholder: 'Ex : Paris Saint-Honoré',
+    maxlength: 40,
+    value: boutiqueName || '',
+  });
+  let errorDiv = null;
+
+  const handleSave = async () => {
+    const name = nameInput.value.trim();
+    if (!name) { showErr('Entre le nom de ta boutique'); return; }
+    try {
+      await setupBoutique(name);
+      refreshTotalQuestions();
+      goTo('home');
+    } catch(e) {
+      showErr('Erreur : ' + e.message);
+    }
+  };
+
+  const showErr = (msg) => {
+    if (errorDiv) errorDiv.remove();
+    errorDiv = el('div', { class: 'error' }, msg);
+    inner.insertBefore(errorDiv, saveBtn);
+  };
+
+  const saveBtn = el('button', { class: 'btn-primary', onclick: handleSave },
+    el('span', { class: 'btn-main' }, boutiqueName ? 'METTRE À JOUR' : 'CRÉER MON PROFIL')
+  );
+
+  const inner = el('div', { class: 'screen-inner' },
+    el('h2', { class: 'screen-title' }, '🏪 Ma boutique'),
+    el('p', { class: 'screen-text' },
+      boutiqueName
+        ? `Profil actuel : "${boutiqueName}". Tes questions personnalisées sont sauvegardées.`
+        : 'Crée un profil boutique pour personnaliser tes questions et les retrouver à chaque session.'
+    ),
+    el('div', { class: 'form-group' },
+      el('label', { class: 'label' }, 'NOM DE LA BOUTIQUE'),
+      nameInput
+    ),
+    saveBtn,
+    boutiqueName && el('button', {
+      class: 'btn-secondary',
+      style: 'margin-top:12px',
+      onclick: () => goTo('editor')
+    },
+      el('span', { class: 'btn-main' }, '✏️ Modifier mes questions')
+    ),
+    boutiqueName && el('button', {
+      class: 'boutique-btn',
+      style: 'margin-top:20px; color:#8B0000;',
+      onclick: async () => {
+        if (confirm(`Supprimer définitivement le profil "${boutiqueName}" et toutes ses questions ?`)) {
+          try {
+            await db.ref(`boutiques/${boutiqueId}`).remove();
+            boutiqueId = null;
+            boutiqueName = null;
+            localStorage.removeItem('chloe_boutique_id');
+            localStorage.removeItem('chloe_boutique_name');
+            ROUNDS = JSON.parse(JSON.stringify(DEFAULT_ROUNDS));
+            refreshTotalQuestions();
+            goTo('home');
+          } catch(e) {
+            alert('Erreur : ' + e.message);
+          }
+        }
+      }
+    }, '🗑 Supprimer ce profil boutique'),
+    el('button', {
+      class: 'boutique-btn',
+      style: 'margin-top:8px',
+      onclick: () => goTo('home')
+    }, '← Retour')
+  );
+
+  return el('div', { class: 'screen' }, inner);
+}
+
+// === ÉDITEUR DE QUESTIONS ===
+function renderEditor() {
+  const inner = el('div', { class: 'screen-inner' });
+  inner.appendChild(el('h2', { class: 'screen-title' }, '✏️ Mes questions'));
+  inner.appendChild(el('p', { class: 'screen-text' }, 'Modifie les questions de chaque manche. Les changements sont sauvegardés automatiquement pour ta boutique.'));
+
+  // Tabs manches
+  let activeRoundIdx = 0;
+  const tabsContainer = el('div', { class: 'editor-tabs' });
+  const contentContainer = el('div', {});
+
+  const renderEditorContent = () => {
+    contentContainer.innerHTML = '';
+    const round = ROUNDS[activeRoundIdx];
+
+    // Questions existantes
+    round.questions.forEach((q, qIdx) => {
+      const qCard = el('div', { class: 'editor-card' });
+      qCard.appendChild(el('div', { class: 'editor-card-header' },
+        el('span', { class: 'editor-card-num' }, `Q${qIdx + 1}`),
+        el('button', { class: 'editor-delete-btn', onclick: async () => {
+          if (confirm('Supprimer cette question ?')) {
+            ROUNDS[activeRoundIdx].questions.splice(qIdx, 1);
+            refreshTotalQuestions();
+            await saveBoutiqueRounds();
+            renderEditorContent();
+          }
+        }}, '✕')
+      ));
+
+      if (round.type === 'buzz_factual') {
+        qCard.appendChild(renderField('Question', q.q, v => { q.q = v; }));
+        qCard.appendChild(renderField('Réponse', q.a, v => { q.a = v; }));
+        qCard.appendChild(renderField('Indice (optionnel)', q.hint || '', v => { q.hint = v; }));
+      } else if (round.type === 'buzz_emotion') {
+        qCard.appendChild(renderField('Émotion', q.emotion, v => { q.emotion = v; }));
+        qCard.appendChild(renderField('Description', q.description, v => { q.description = v; }));
+        qCard.appendChild(renderField('Réponse (sac)', q.a, v => { q.a = v; }));
+      } else if (round.type === 'buzz_free') {
+        qCard.appendChild(renderField('Sac concerné', q.bag, v => { q.bag = v; }));
+        qCard.appendChild(renderField('Objection cliente', q.cliente, v => { q.cliente = v; }));
+        qCard.appendChild(renderField('Éléments de réponse', q.keyPoints, v => { q.keyPoints = v; }));
+      } else if (round.type === 'draw_pitch') {
+        qCard.appendChild(renderField('Sac', q.bag, v => { q.bag = v; }));
+        qCard.appendChild(renderField('Émotion', q.emotion || '', v => { q.emotion = v; }));
+        qCard.appendChild(renderField('Indice', q.hint || '', v => { q.hint = v; }));
+      }
+
+      // Bouton sauvegarder cette question
+      qCard.appendChild(el('button', { class: 'editor-save-btn', onclick: async () => {
+        await saveBoutiqueRounds();
+        const btn = qCard.querySelector('.editor-save-btn');
+        btn.textContent = '✓ Sauvegardé !';
+        setTimeout(() => { btn.textContent = 'Sauvegarder'; }, 1500);
+      }}, 'Sauvegarder'));
+
+      contentContainer.appendChild(qCard);
+    });
+
+    // Bouton ajouter question
+    contentContainer.appendChild(el('button', { class: 'editor-add-btn', onclick: async () => {
+      const round = ROUNDS[activeRoundIdx];
+      if (round.type === 'buzz_factual') round.questions.push({ q: '', a: '', hint: '' });
+      else if (round.type === 'buzz_emotion') round.questions.push({ emotion: '', description: '', a: '', indices: [] });
+      else if (round.type === 'buzz_free') round.questions.push({ bag: '', cliente: '', keyPoints: '', motsCles: [] });
+      else if (round.type === 'draw_pitch') round.questions.push({ bag: '', emotion: '', hint: '' });
+      refreshTotalQuestions();
+      await saveBoutiqueRounds();
+      renderEditorContent();
+    }}, '+ Ajouter une question'));
+
+    // Bouton reset manche
+    contentContainer.appendChild(el('button', { class: 'editor-reset-btn', onclick: async () => {
+      if (confirm('Remettre les questions par défaut pour cette manche ?')) {
+        ROUNDS[activeRoundIdx].questions = JSON.parse(JSON.stringify(DEFAULT_ROUNDS[activeRoundIdx].questions));
+        refreshTotalQuestions();
+        await saveBoutiqueRounds();
+        renderEditorContent();
+      }
+    }}, '↺ Remettre les questions par défaut'));
+  };
+
+  // Render tabs
+  const renderTabs = () => {
+    tabsContainer.innerHTML = '';
+    ROUNDS.forEach((r, i) => {
+      tabsContainer.appendChild(el('button', {
+        class: 'editor-tab' + (i === activeRoundIdx ? ' active' : ''),
+        onclick: () => { activeRoundIdx = i; renderTabs(); renderEditorContent(); }
+      }, r.shortName));
+    });
+  };
+
+  renderTabs();
+  renderEditorContent();
+
+  inner.appendChild(el('div', { class: 'label', style: 'margin-bottom:8px' }, 'SÉLECTIONNE UNE MANCHE'));
+  inner.appendChild(tabsContainer);
+  inner.appendChild(contentContainer);
+  inner.appendChild(el('button', { class: 'boutique-btn', style: 'margin-top:24px', onclick: () => goTo('boutique-setup') }, '← Retour'));
+
+  return el('div', { class: 'screen', style: 'padding-bottom:60px' }, inner);
+}
+
+// Champ éditable
+function renderField(label, value, onChange) {
+  const inp = el('textarea', {
+    class: 'editor-field',
+    rows: label === 'Question' || label === 'Objection cliente' || label === 'Éléments de réponse' ? 3 : 1,
+  });
+  inp.value = value;
+  inp.addEventListener('input', () => onChange(inp.value));
+  return el('div', { class: 'editor-field-group' },
+    el('label', { class: 'editor-field-label' }, label),
+    inp
   );
 }
 
@@ -1292,7 +1574,14 @@ function renderEndScreen(container, state, isPlayer) {
 }
 
 // === INIT ===
-render();
+// Charger les questions boutique si profil existant, puis lancer l'app
+(async () => {
+  if (boutiqueId && FIREBASE_CONFIGURED) {
+    await loadBoutiqueRounds();
+    refreshTotalQuestions();
+  }
+  render();
+})();
 </script>
 </body>
 </html>
