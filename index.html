@@ -361,12 +361,12 @@ const DEFAULT_ROUNDS = [
     description: "j'affiche un sac → l'app tire au sort 1 participant → cette personne doit vendre le sac en 1 phrase émotionnelle.",
     type: 'draw_pitch',
     questions: [
-      { bag: 'Chloé Spin', emotion: 'EFFORTLESS', hint: 'Le tote effortless du quotidien' },
-      { bag: 'Summer Banana', emotion: 'DÉSIR DE VACANCES', hint: 'Vacances toute l\'année, raffia, easygoing' },
-      { bag: 'Bracelet Bag', emotion: 'SÉDUCTION', hint: 'Bijou bag, day-to-evening, sophistiqué' },
-      { bag: 'Paddington', emotion: 'NOSTALGIE', hint: 'Iconique, heritage, the bag you keep forever' },
-      { bag: 'Marcie', emotion: 'SÉRÉNITÉ', hint: 'Féminin, gracieux, équilibré, comforting' },
-      { bag: 'Chloé Plissé', emotion: 'CULOT', hint: 'Statement piece, design unique, intricate' },
+      { bag: 'Chloé Spin', emotion: 'EFFORTLESS', hint: 'Le tote effortless du quotidien', exemple: 'Le sac qui s\'oublie sur l\'épaule et s\'adapte à ta journée.' },
+      { bag: 'Summer Banana', emotion: 'DÉSIR DE VACANCES', hint: 'Vacances toute l\'année, raffia, easygoing', exemple: 'Ce sac, c\'est l\'impression d\'être en vacances même un lundi matin.' },
+      { bag: 'Bracelet Bag', emotion: 'SÉDUCTION', hint: 'Bijou bag, day-to-evening, sophistiqué', exemple: 'Un sac qui transforme n\'importe quelle tenue en statement.' },
+      { bag: 'Paddington', emotion: 'NOSTALGIE', hint: 'Iconique, heritage, the bag you keep forever', exemple: 'Le sac qu\'on passe à sa fille — avec une histoire dedans.' },
+      { bag: 'Marcie', emotion: 'SÉRÉNITÉ', hint: 'Féminin, gracieux, équilibré, comforting', exemple: 'Un sac qui met à l\'aise dès qu\'on le porte — sans y penser.' },
+      { bag: 'Chloé Plissé', emotion: 'CULOT', hint: 'Statement piece, design unique, intricate', exemple: 'Ce sac, on ne le choisit pas pour passer inaperçue.' },
     ],
   },
 ];
@@ -1012,6 +1012,14 @@ function renderRound4(container, question, state, players, qIdx, round) {
       }, state.drawing ? 'TIRAGE…' : `🎲 TIRER AU SORT (parmi ${availablePlayers.length})`));
     }
   } else {
+    // Exemple de pitch — visible pour le maître seulement
+    if (question.exemple) {
+      drawArea.appendChild(el('div', { style: 'background:rgba(251,247,240,0.1);border:1px solid rgba(251,247,240,0.3);padding:14px;margin-top:16px;margin-bottom:4px;' },
+        el('div', { style: 'font-size:9px;letter-spacing:2px;opacity:0.7;margin-bottom:6px;font-weight:700;' }, 'EXEMPLE DE BONNE PHRASE'),
+        el('div', { style: 'font-family:"Cormorant Garamond",serif;font-style:italic;font-size:17px;color:#FBF7F0;line-height:1.4;' },
+          `"${question.exemple}"`)
+      ));
+    }
     drawArea.appendChild(el('button', {
       class: 'draw-btn',
       onclick: () => awardPointR4(drawnPlayerId)
